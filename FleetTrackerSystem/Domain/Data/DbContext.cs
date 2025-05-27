@@ -15,8 +15,11 @@ namespace FleetTrackerSystem.Domain.Data
         }
 
         public DbSet<Vehicle> Vehicles { get; set; } 
-        public DbSet<Company> Companies { get; set; } 
-       
+        public DbSet<Company> Companies { get; set; }
+
+        public DbSet<Permission> Permissions { get; set; }
+        public DbSet<UserPermission> UserPermissions { get; set; }
+
     }
 
 }

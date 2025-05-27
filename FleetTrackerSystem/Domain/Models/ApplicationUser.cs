@@ -13,5 +13,7 @@ namespace FleetTrackerSystem.Domain.Models
         [ForeignKey("Company")]
         public int? CompanyId { get; set; } 
         public Company Company { get; set; }
+
+        public ICollection<UserPermission> UserPermissions { get; set; }
     }
 }

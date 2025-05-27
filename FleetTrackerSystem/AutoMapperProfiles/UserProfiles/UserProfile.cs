@@ -9,9 +9,10 @@ namespace FleetTrackerSystem.AutoMapperProfiles.UserProfiles
         public UserProfile()
         {
             CreateMap<ApplicationUser, UserDto>().ReverseMap();
-            CreateMap<CreateUserDto, ApplicationUser>();
-               
-               
+            CreateMap<CreateUserDto, ApplicationUser>()
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+
 
 
 

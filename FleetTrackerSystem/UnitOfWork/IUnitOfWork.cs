@@ -8,6 +8,8 @@ namespace FleetTrackerSystem.UnitOfWork
         IVehicle Vehicle { get; }
         IUser User { get; }
         IAccount account { get; }
+
+        IPermissionRepository Permission { get; }
         Task SaveChangesAsync();
     }
     

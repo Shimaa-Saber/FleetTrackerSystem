@@ -14,20 +14,25 @@ namespace FleetTrackerSystem.Controllers
     public class CompanyMangementController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
-      
+        private readonly ILogger<CompanyMangementController> _logger;
 
-       
+
+
         public CompanyMangementController(
-            IUnitOfWork unitOfWork)
+            IUnitOfWork unitOfWork,
+            ILogger<CompanyMangementController> logger
+            )
             
             { 
             _unitOfWork = unitOfWork;
+            _logger = logger;
         }
         
         [HttpGet]
         public IActionResult GetAllCompanies()
         {
             IEnumerable<Company> companies = _unitOfWork.Company.GetAll();
+            _logger.LogInformation("Retrieved {Count} companies from the database.", companies.Count());
             return Ok(companies);
         }
         
@@ -36,8 +41,16 @@ namespace FleetTrackerSystem.Controllers
         {
             if (id <= 0)
             {
+                _logger.LogWarning("Invalid ID provided: {Id}", id);
                 return BadRequest("Invalid ID provided.");
+                
             }
+            if (!_unitOfWork.Company.Exists(id))
+            {
+                _logger.LogWarning("Company with ID {Id} not found.", id);
+                return NotFound("Company not found.");
+            }   
+
             var company = _unitOfWork.Company.GetByID(id);
             return Ok(company);
         }
@@ -51,6 +64,7 @@ namespace FleetTrackerSystem.Controllers
             }
 
             var company = Dto.Map<Company>();
+            _logger.LogInformation("Adding new company with name: {CompanyName}", company.Name);
 
             _unitOfWork.Company.Add(company);
             await _unitOfWork.SaveChangesAsync(); 

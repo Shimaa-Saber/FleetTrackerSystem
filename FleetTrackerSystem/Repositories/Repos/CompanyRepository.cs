@@ -11,6 +11,12 @@ namespace FleetTrackerSystem.Repositories.Repos
         {
             _context = context;
         }
+
+        public bool Exists(int id)
+        {
+            return _context.Companies.Any(c => c.ID == id);
+
+        }
     }
     
     }

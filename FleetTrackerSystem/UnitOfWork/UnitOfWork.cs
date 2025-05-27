@@ -12,18 +12,24 @@ namespace FleetTrackerSystem.UnitOfWork
 
         public IUser User { get; private set; }
         public IAccount account { get; private set; }
+        public IPermissionRepository Permission { get; private set; }
+
+
         public UnitOfWork(
             FeetTrackerDbContext context,
             ICompany company,
             IVehicle vehicle,
             IUser user,
-            IAccount account)
+            IAccount account,
+            IPermissionRepository permission
+            )
             
         {   _context = context;
             Company = company;
             Vehicle = vehicle;
             User = user;
             this.account = account;
+            Permission = permission;
         }
 
 
