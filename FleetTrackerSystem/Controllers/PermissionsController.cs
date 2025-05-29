@@ -25,6 +25,10 @@ namespace FleetTrackerSystem.Controllers
         [HttpGet("users/{userId}")]
         public async Task<IActionResult> GetUserPermissions(string userId)
         {
+            if (string.IsNullOrEmpty(userId))
+                return BadRequest("User ID cannot be null or empty.");
+          
+
             var userPermissions = await _unitOfWork.Permission.GetUserPermissionsAsync(userId);
             return Ok(userPermissions);
         }

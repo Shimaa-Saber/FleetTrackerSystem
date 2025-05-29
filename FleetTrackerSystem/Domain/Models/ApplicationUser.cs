@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FleetTrackerSystem.Domain.Models
 {
-    public class ApplicationUser:IdentityUser<string>
+    public class ApplicationUser:IdentityUser
     {
         public string FirstName { get; set; } 
         public string LastName { get; set; } 

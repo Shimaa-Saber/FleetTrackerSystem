@@ -2,7 +2,7 @@
 
 namespace FleetTrackerSystem.Domain.Models
 {
-    public class ApplicationRole:IdentityRole<string>
+    public class ApplicationRole:IdentityRole
     {
         public ApplicationRole(string roleName) : base(roleName)
         {
