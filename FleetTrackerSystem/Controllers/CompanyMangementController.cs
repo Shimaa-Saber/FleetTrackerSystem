@@ -1,7 +1,11 @@
-﻿using FleetTrackerSystem.Domain.Models;
+﻿using FleetTrackerSystem.CQRS.CompanyMangement.Comands;
+using FleetTrackerSystem.CQRS.CompanyMangement.Queries;
+using FleetTrackerSystem.Domain.Models;
 using FleetTrackerSystem.DTOS.Company;
 using FleetTrackerSystem.Repositories.Repos;
 using FleetTrackerSystem.UnitOfWork;
+using FleetTrackerSystem.ViewModels;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Runtime.CompilerServices;
@@ -13,69 +17,62 @@ namespace FleetTrackerSystem.Controllers
     [ApiController]
     public class CompanyMangementController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+      
         private readonly ILogger<CompanyMangementController> _logger;
+        private readonly IMediator _mediator;
 
 
 
         public CompanyMangementController(
-            IUnitOfWork unitOfWork,
-            ILogger<CompanyMangementController> logger
+       
+            ILogger<CompanyMangementController> logger,
+            IMediator mediator
             )
             
             { 
-            _unitOfWork = unitOfWork;
+          
             _logger = logger;
+            _mediator = mediator;
         }
         
         [HttpGet]
-        public IActionResult GetAllCompanies()
+        public async Task<ResponseViewModel<IEnumerable<Company>>> GetAllCompanies()
         {
-            IEnumerable<Company> companies = _unitOfWork.Company.GetAll();
+            var companies = await _mediator.Send(new GetAllCompaniesQuery());
             _logger.LogInformation("Retrieved {Count} companies from the database.", companies.Count());
-            return Ok(companies);
+            return ResponseViewModel<IEnumerable<Company>>.Success(companies);
         }
         
         [HttpGet("{id}")]
-        public IActionResult GetCompanyById(int id)
+        public async Task<ResponseViewModel<Company>> GetCompanyById(int id)
         {
             if (id <= 0)
             {
                 _logger.LogWarning("Invalid ID provided: {Id}", id);
-                return BadRequest("Invalid ID provided.");
+             
                 
             }
-            if (!_unitOfWork.Company.Exists(id))
-            {
-                _logger.LogWarning("Company with ID {Id} not found.", id);
-                return NotFound("Company not found.");
-            }   
 
-            var company = _unitOfWork.Company.GetByID(id);
-            return Ok(company);
+            var company = await _mediator.Send(new GetCompanyByIdQuery (id)  );
+           return ResponseViewModel<Company>.Success(company); 
+           
         }
 
         [HttpPost("AddCompany")]
-        public async Task<IActionResult> AddCompany(AddCompany Dto)
+        public async void AddCompany(AddCompany Dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
-            var company = Dto.Map<Company>();
-            _logger.LogInformation("Adding new company with name: {CompanyName}", company.Name);
+            _logger.LogInformation("Adding new company with name");
 
-            _unitOfWork.Company.Add(company);
-            await _unitOfWork.SaveChangesAsync(); 
+            var command = Dto.Map<AddCompanyComand>();
+             await _mediator.Send(command);
 
-            return CreatedAtAction(nameof(GetCompanyById), new { id = company.ID }, Dto); 
         }
 
 
 
         [HttpPut("{id}/UpdateCompany")]
-        public IActionResult UpdateCompany(int id, UpdateCompanyDto Dto)
+        public async Task<IActionResult> UpdateCompany(int id, UpdateCompanyDto Dto)
         {
             if (id <= 0 || id != Dto.Id)
             {
@@ -85,17 +82,12 @@ namespace FleetTrackerSystem.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var company = _unitOfWork.Company.GetByID(id);
-            if (company == null)
-            {
-                return NotFound("Company not found.");
-            }
-            var updatedCompany = Dto.Map<Company>();
-
-            _unitOfWork.Company.Update(updatedCompany);
-            _unitOfWork.SaveChangesAsync();
+            var comand = Dto.Map<UpdateCompanyComand>();
+            await _mediator.Send(comand);
+           
             return NoContent();
         }
+
 
         [HttpDelete("{id}/RemoveCompany")]
         public async Task<IActionResult> DeleteCompany(int id) { 
@@ -103,13 +95,8 @@ namespace FleetTrackerSystem.Controllers
             {
                 return BadRequest("Invalid ID provided.");
             }
-            var company = _unitOfWork.Company.GetByID(id);
-            if (company == null)
-            {
-                return NotFound("Company not found.");
-            }
-            _unitOfWork.Company.Remove(id);
-          await  _unitOfWork.SaveChangesAsync();
+          await _mediator.Send(new RemoveCompanyComand { id=id});
+            
             return NoContent();
         }
 

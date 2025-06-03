@@ -135,18 +135,14 @@ builder.Services.AddSwaggerGen(swagger =>
                     });
 });
 
+builder.Services.AddMediatR(opts =>
+               opts.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
 
 MapperService.Mapper = config.CreateMapper();
 
 
 var app = builder.Build();
-
-//using (var scope = app.Services.CreateScope())
-//{
-//    var services = scope.ServiceProvider;
-//    await RoleInitializer.Initialize(services); 
-//}
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
