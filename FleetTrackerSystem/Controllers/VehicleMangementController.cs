@@ -1,9 +1,15 @@
-﻿using FleetTrackerSystem.Domain.Models;
+﻿using FleetTrackerSystem.CQRS.VehicleMangment.Comands;
+using FleetTrackerSystem.CQRS.VehicleMangment.Queries;
+using FleetTrackerSystem.Domain.Enums;
+using FleetTrackerSystem.Domain.Models;
 using FleetTrackerSystem.DTOS.Vehicles;
 using FleetTrackerSystem.Repositories.Repos;
 using FleetTrackerSystem.UnitOfWork;
+using FleetTrackerSystem.ViewModels;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace FleetTrackerSystem.Controllers
 {
@@ -11,28 +17,28 @@ namespace FleetTrackerSystem.Controllers
     [ApiController]
     public class VehicleMangementController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
-        public VehicleMangementController(IUnitOfWork unitOfWork)
+      private readonly IMediator _mediator;
+        public VehicleMangementController( 
+             IMediator mediator)
+            
         {
-            _unitOfWork = unitOfWork;
+            _mediator = mediator;
+           
         }
         [HttpGet]
-        public IActionResult GetAllVehicles()
+        public async Task<ResponseViewModel<IEnumerable<Vehicle>>> GetAllVehicles()
         {
-            var vehicles = _unitOfWork.Vehicle.GetAll();
-            return Ok(vehicles);
+          var Vehicles= await _mediator.Send(new GetAllVehiclesQuery());
+            return ResponseViewModel<IEnumerable<Vehicle>>.Success(Vehicles);
         }
 
 
         [HttpGet("{id}")]
-        public IActionResult GetVehicleById(int id)
+        public async Task<ResponseViewModel<Vehicle>> GetVehicleById(int id)
         {
-            if (id <= 0)
-            {
-                return BadRequest("Invalid ID provided.");
-            }
-            var vehicle = _unitOfWork.Vehicle.GetByID(id);
-            return Ok(vehicle);
+   
+            var vehicle = await _mediator.Send(new GetVehiclesByIdQuery(id));
+            return ResponseViewModel<Vehicle>.Success(vehicle);
         }
 
 
@@ -43,10 +49,12 @@ namespace FleetTrackerSystem.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var vehicle = dto.Map<Vehicle>();
-            _unitOfWork.Vehicle.Add(vehicle);
-            await _unitOfWork.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetVehicleById), new { id = vehicle.ID }, dto);
+            
+            var vehicle = dto.Map<AddVehicleComand>();
+           await _mediator.Send(vehicle);
+
+            return NoContent();
+
         }
 
         [HttpPut("UpdateVehicle/{id}")]
@@ -57,14 +65,9 @@ namespace FleetTrackerSystem.Controllers
             {
                 return BadRequest(ModelState);
             }
-            var vehicle = _unitOfWork.Vehicle.GetByID(id);
-            if (vehicle == null)
-            {
-                return NotFound("Vehicle not found.");
-            }
-            vehicle = dto.Map<Vehicle>();
-            _unitOfWork.Vehicle.Update(vehicle);
-            await _unitOfWork.SaveChangesAsync();
+           
+           var vehicle = dto.Map<UpdateVehicleComand>();
+             await  _mediator.Send(vehicle);
             return NoContent();
         }
 
@@ -75,13 +78,11 @@ namespace FleetTrackerSystem.Controllers
             {
                 return BadRequest("Invalid ID provided.");
             }
-            var vehicle = _unitOfWork.Vehicle.GetByID(id);
-            if (vehicle == null)
+          
+            await _mediator.Send(new RemoveVehicleComand()
             {
-                return NotFound("Vehicle not found.");
-            }
-            _unitOfWork.Vehicle.Remove(id);
-            await _unitOfWork.SaveChangesAsync();
+                Id = id
+            });
             return NoContent();
         }
     }
