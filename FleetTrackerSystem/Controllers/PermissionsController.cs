@@ -1,4 +1,8 @@
-﻿using FleetTrackerSystem.UnitOfWork;
+﻿using FleetTrackerSystem.CQRS.CompanyMangement.Queries;
+using FleetTrackerSystem.CQRS.Permissions.Comands;
+using FleetTrackerSystem.CQRS.Permissions.Queries;
+using FleetTrackerSystem.UnitOfWork;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,17 +12,19 @@ namespace FleetTrackerSystem.Controllers
     [ApiController]
     public class PermissionsController : ControllerBase
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMediator _mediator;
         private readonly ILogger<PermissionsController> _logger;
-        public PermissionsController(IUnitOfWork unitOfWork, ILogger<PermissionsController> logger)
+        public PermissionsController(IMediator mediator, ILogger<PermissionsController> logger)
         {
-            _unitOfWork = unitOfWork;
+            
             _logger = logger;
+            _mediator = mediator;
         }
         [HttpGet("GetAllPermissions")]
         public async Task<IActionResult> GetAllPermissions()
         {
-            var permissions = await _unitOfWork.Permission.GetAllPermissionsAsync();
+          _logger.LogInformation("Fetching all permissions.");
+            var permissions = await _mediator.Send(new GetAllCompaniesQuery());
             return Ok(permissions);
         }
 
@@ -29,7 +35,7 @@ namespace FleetTrackerSystem.Controllers
                 return BadRequest("User ID cannot be null or empty.");
           
 
-            var userPermissions = await _unitOfWork.Permission.GetUserPermissionsAsync(userId);
+            var userPermissions = await _mediator.Send(new GetUserPermissions(userId));
             return Ok(userPermissions);
         }
 
@@ -40,7 +46,11 @@ namespace FleetTrackerSystem.Controllers
             if (permissionNames == null || !permissionNames.Any())
                 return BadRequest("Permission list cannot be empty.");
 
-            await _unitOfWork.Permission.AssignPermissionsAsync(userId, permissionNames);
+            await _mediator.Send(new AssinePermissionComand
+            {
+                UserId = userId,
+                PermissionNames = permissionNames
+            });
             return Ok("Permissions assigned successfully.");
         }
 
@@ -48,7 +58,10 @@ namespace FleetTrackerSystem.Controllers
         [HttpDelete("users/{userId}")]
         public async Task<IActionResult> RevokePermissions(string userId)
         {
-            await _unitOfWork.Permission.RevokePermissionsAsync(userId);
+           await _mediator.Send(new revokePermission
+            {
+                UserId = userId
+            });
             return Ok("Permissions revoked successfully.");
         }
 

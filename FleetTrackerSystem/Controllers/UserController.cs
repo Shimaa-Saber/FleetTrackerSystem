@@ -1,9 +1,15 @@
-﻿using FleetTrackerSystem.Domain.Models;
+﻿using FleetTrackerSystem.CQRS.UserMangement.Comands;
+using FleetTrackerSystem.CQRS.UserMangement.Queries;
+using FleetTrackerSystem.Domain.Models;
 using FleetTrackerSystem.DTOS.User;
+using FleetTrackerSystem.Repositories.Interfaces;
 using FleetTrackerSystem.Repositories.Repos;
 using FleetTrackerSystem.UnitOfWork;
+using FleetTrackerSystem.ViewModels;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace FleetTrackerSystem.Controllers
 {
@@ -12,30 +18,33 @@ namespace FleetTrackerSystem.Controllers
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;
+        private readonly IMediator _mediator;
         private readonly IUnitOfWork _unitOfWork;
         public UserController(
             ILogger<UserController> logger,
-            IUnitOfWork unitOfWork)
+            IMediator mediator,
+            IUnitOfWork unitOfWork
+            )
         {
             _logger = logger;
+            _mediator = mediator;
             _unitOfWork = unitOfWork;
+
         }
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers()
+        public async Task<ResponseViewModel<IEnumerable<UserDto>>> GetAllUsers()
         {
-            var users = await _unitOfWork.User.GetAllUsers();
-            return Ok(users);
+            var users = await _mediator.Send(new GetAllUsersQuery());
+
+            return ResponseViewModel<IEnumerable<UserDto>>.Success(users);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetUserById(string id)
+        public async Task<ResponseViewModel<UserDto>> GetUserById(string id)
         {
-            if (string.IsNullOrEmpty(id))
-            {
-                return BadRequest("Invalid ID provided.");
-            }
-            var user = await _unitOfWork.User.GetUserById(id);
-            return Ok(user);
+            var user = await _mediator.Send(new GetUserByIdQuery(id));
+         return   ResponseViewModel<UserDto>.Success(user);
+
         }
 
         [HttpPost("AddUser")]
@@ -45,28 +54,30 @@ namespace FleetTrackerSystem.Controllers
             {
                 return BadRequest(ModelState);
             }
+            var command = Dto.Map<AddUserComand>();
+            await _mediator.Send(command);
 
-          var  createdUser= await _unitOfWork.User.CreateUser(Dto);
-            await _unitOfWork.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
+
+            return NoContent();
 
 
         }
 
         [HttpPut("{id}/UpdateUser")]
-        public IActionResult UpdateUser(string id,  UpdateUserDto Dto)
+        public async Task<IActionResult> UpdateUser(string id,  UpdateUserDto Dto)
         {
             if (string.IsNullOrEmpty(id) || id != Dto.Id)
             {
                 return BadRequest("Invalid ID provided.");
             }
-            var user = _unitOfWork.User.GetUserById(id);
-            if (user == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound("User not found.");
+                return BadRequest(ModelState);
             }
-            _unitOfWork.User.UpdateUser(Dto);
-            _unitOfWork.SaveChangesAsync();
+            var command = Dto.Map<UpdateUserComand>();
+           await _mediator.Send(command);
+
+
             return NoContent();
         }
 
@@ -77,36 +88,29 @@ namespace FleetTrackerSystem.Controllers
             {
                 return BadRequest("Invalid ID provided.");
             }
-            var user = _unitOfWork.User.GetUserById(id);
-            if (user == null)
-            {
-                return NotFound("User not found.");
-            }
-            await _unitOfWork.User.DeleteUser(id);
-            await _unitOfWork.SaveChangesAsync();
+           await _mediator.Send(new RemoveUserComand { Id = id });
+
             return NoContent();
         }
+
+
+
         [HttpGet("GetUserByCompanyId/{companyId}")]
-        public IActionResult GetUserByCompanyId(int companyId
-            )
+        public async Task<ResponseViewModel<UserDto>> GetUserByCompanyId(int companyId)
+
         {
-            if (companyId <= 0)
-            {
-                return BadRequest("Invalid Company ID provided.");
-            }
-            var user = _unitOfWork.User.GetUserByCompanyId(companyId);
-            return Ok(user);
+          
+            var user = await _mediator.Send(new GetUserByComanyId(companyId));
+
+            return ResponseViewModel<UserDto>.Success(user);
         }
 
         [HttpGet("GetUserByEmail/{email}")]
-        public IActionResult GetUserByEmail(string email)
+        public async Task<ResponseViewModel<UserDto>> GetUserByEmail(string email)
         {
-            if (string.IsNullOrEmpty(email))
-            {
-                return BadRequest("Invalid Email provided.");
-            }
-            var user = _unitOfWork.User.GetUserByEmail(email);
-            return Ok(user);
+            
+            var user =await _mediator.Send(new GetUserByEmailQuery(email));
+            return ResponseViewModel<UserDto>.Success(user);
         }
 
         [HttpGet("UserExists/{email}")]
