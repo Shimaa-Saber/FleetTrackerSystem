@@ -5,9 +5,11 @@ using FleetTrackerSystem.UnitOfWork;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FleetTrackerSystem.Controllers
 {
+    [EnableRateLimiting("FixedPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class PermissionsController : ControllerBase

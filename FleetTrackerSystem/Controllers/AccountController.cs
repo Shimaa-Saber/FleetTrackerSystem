@@ -3,9 +3,11 @@ using FleetTrackerSystem.DTOS.User;
 using FleetTrackerSystem.UnitOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 
 namespace FleetTrackerSystem.Controllers
 {
+    [EnableRateLimiting("FixedPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class AccountController : ControllerBase

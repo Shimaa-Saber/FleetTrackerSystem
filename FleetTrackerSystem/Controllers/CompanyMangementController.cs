@@ -8,11 +8,13 @@ using FleetTrackerSystem.ViewModels;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace FleetTrackerSystem.Controllers
 {
+    [EnableRateLimiting("FixedPolicy")]
     [Route("api/[controller]")]
     [ApiController]
     public class CompanyMangementController : ControllerBase

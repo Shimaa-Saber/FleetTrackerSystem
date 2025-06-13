@@ -17,6 +17,7 @@ using Serilog;
 using Serilog.Sinks.MSSqlServer;
 using System.Diagnostics;
 using System.Text;
+using System.Threading.RateLimiting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +51,22 @@ builder.Host.UseSerilog();
 
 
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
+
+
+builder.Services.AddRateLimiter(options =>
+{
+    options.AddPolicy("FixedPolicy", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            context.Connection.RemoteIpAddress?.ToString() ?? "unknown", 
+            key => new FixedWindowRateLimiterOptions 
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromSeconds(10),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit = 0
+            }));
+});
 
 
 builder.Services.AddDbContext<FeetTrackerDbContext>(options =>
@@ -143,6 +160,8 @@ MapperService.Mapper = config.CreateMapper();
 
 
 var app = builder.Build();
+
+app.UseRateLimiter();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

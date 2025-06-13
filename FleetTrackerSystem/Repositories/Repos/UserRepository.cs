@@ -36,56 +36,56 @@ internal class UserRepository : IUser
         return user.Map<UserDto>();
     }
 
-    //public async Task<bool> DeleteUser(string id)
-    //{
-    //    var user = await _context.Users.FindAsync(id);
-    //    if (user == null) return false;
-    //    _context.Users.Remove(user);
-    //    return await _context.SaveChangesAsync() > 0;
-    //}
+    public async Task<bool> DeleteUser(string id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        if (user == null) return false;
+        _context.Users.Remove(user);
+        return await _context.SaveChangesAsync() > 0;
+    }
 
 
 
-    //public async Task<IEnumerable<UserDto>> GetAllUsers()
+    public async Task<IEnumerable<UserDto>> GetAllUsers()
 
-    //{
-    //    var users = await _context.Users.ToListAsync();
-    //    return users.Select(u => u.Map<UserDto>());
-    //}
+    {
+        var users = await _context.Users.ToListAsync();
+        return users.Select(u => u.Map<UserDto>());
+    }
 
 
-    //public async Task<UserDto> GetUserByCompanyId(int companyId)
-    //{
-    //    var user = await _context.Users.FirstOrDefaultAsync(u => u.CompanyId == companyId);
-    //    return user?.Map<UserDto>();
-    //}
+    public async Task<UserDto> GetUserByCompanyId(int companyId)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.CompanyId == companyId);
+        return user?.Map<UserDto>();
+    }
 
-    //public async Task<UserDto> GetUserById(string id)
-    //{
-    //    var user = await _context.Users.FindAsync(id);
-    //    return user?.Map<UserDto>();
-    //}
-    //public async Task<UserDto> GetUserByEmail(string email)
-    //{
-    //    var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
-    //    return user?.Map<UserDto>();
-    //}
+    public async Task<UserDto> GetUserById(string id)
+    {
+        var user = await _context.Users.FindAsync(id);
+        return user?.Map<UserDto>();
+    }
+    public async Task<UserDto> GetUserByEmail(string email)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        return user?.Map<UserDto>();
+    }
     public async Task<bool> UserExists(string email)
     {
         return await _context.Users.AnyAsync(u => u.Email == email);
     }
-   
-    //public async Task<UserDto> UpdateUser(UpdateUserDto userDto)
-    //{
-    //    var user = await _context.Users.FindAsync(userDto.Id);
-    //    if (user == null) return null;
 
-    //   var User= userDto.Map<ApplicationUser>();
+    public async Task<UserDto> UpdateUser(UpdateUserDto userDto)
+    {
+        var user = await _context.Users.FindAsync(userDto.Id);
+        if (user == null) return null;
 
-    //    _context.Users.Update(User);
-       
-    //    return user.Map<UserDto>();
-    //}
+        var User = userDto.Map<ApplicationUser>();
+
+        _context.Users.Update(User);
+
+        return user.Map<UserDto>();
+    }
 }
 
 
