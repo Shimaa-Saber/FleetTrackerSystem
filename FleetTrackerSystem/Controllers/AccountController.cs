@@ -1,11 +1,11 @@
-﻿using FleetTrackerSystem.DTOS;
-using FleetTrackerSystem.DTOS.User;
-using FleetTrackerSystem.UnitOfWork;
+﻿using FleetTrackerSystem.Application.DTOS;
+using FleetTrackerSystem.Application.DTOS.User;
+using FleetTrackerSystem.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
-namespace FleetTrackerSystem.Controllers
+namespace FleetTrackerSystem.API.Controllers
 {
     [EnableRateLimiting("FixedPolicy")]
     [Route("api/[controller]")]

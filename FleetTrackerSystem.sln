@@ -1,9 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36109.1 d17.14
+VisualStudioVersion = 17.14.36109.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetTrackerSystem", "FleetTrackerSystem\FleetTrackerSystem.csproj", "{F7E41FD4-7974-402E-887B-C46E461785C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetTrackerSystem.API", "FleetTrackerSystem\FleetTrackerSystem.API.csproj", "{F7E41FD4-7974-402E-887B-C46E461785C9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetTrackerSystem.Domain", "FleetTrackerSystem.Domain\FleetTrackerSystem.Domain.csproj", "{203E301C-E323-4D2C-A641-C6B8F174B703}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetTrackerSystem.Application", "FleetTrackerSystem.Application\FleetTrackerSystem.Application.csproj", "{7E4586D3-F964-4DF1-98DC-560AB8FD49F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FleetTrackerSystem.Infrastructure", "FleetTrackerSystem.Infrastructure\FleetTrackerSystem.Infrastructure.csproj", "{6DD59530-CA12-42A2-853D-B9A1242271B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{F7E41FD4-7974-402E-887B-C46E461785C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F7E41FD4-7974-402E-887B-C46E461785C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F7E41FD4-7974-402E-887B-C46E461785C9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{203E301C-E323-4D2C-A641-C6B8F174B703}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{203E301C-E323-4D2C-A641-C6B8F174B703}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{203E301C-E323-4D2C-A641-C6B8F174B703}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{203E301C-E323-4D2C-A641-C6B8F174B703}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E4586D3-F964-4DF1-98DC-560AB8FD49F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E4586D3-F964-4DF1-98DC-560AB8FD49F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E4586D3-F964-4DF1-98DC-560AB8FD49F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E4586D3-F964-4DF1-98DC-560AB8FD49F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6DD59530-CA12-42A2-853D-B9A1242271B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6DD59530-CA12-42A2-853D-B9A1242271B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6DD59530-CA12-42A2-853D-B9A1242271B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6DD59530-CA12-42A2-853D-B9A1242271B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

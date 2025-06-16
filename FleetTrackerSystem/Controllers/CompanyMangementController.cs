@@ -1,18 +1,20 @@
-﻿using FleetTrackerSystem.CQRS.CompanyMangement.Comands;
-using FleetTrackerSystem.CQRS.CompanyMangement.Queries;
+﻿using FleetTrackerSystem.Application.CQRS.CompanyMangement.Comands;
+using FleetTrackerSystem.Application.CQRS.CompanyMangement.Queries;
+using FleetTrackerSystem.Application.DTOS.Company;
+using FleetTrackerSystem.Application.ViewModels;
+
 using FleetTrackerSystem.Domain.Models;
-using FleetTrackerSystem.DTOS.Company;
-using FleetTrackerSystem.Repositories.Repos;
-using FleetTrackerSystem.UnitOfWork;
-using FleetTrackerSystem.ViewModels;
+using FleetTrackerSystem.Infrastructure.Repositories.Repos;
+
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Runtime.CompilerServices;
+
 using System.Threading.Tasks;
 
-namespace FleetTrackerSystem.Controllers
+namespace FleetTrackerSystem.API.Controllers
 {
     [EnableRateLimiting("FixedPolicy")]
     [Route("api/[controller]")]
@@ -63,15 +65,11 @@ namespace FleetTrackerSystem.Controllers
         [HttpPost("AddCompany")]
         public async void AddCompany(AddCompany Dto)
         {
-
             _logger.LogInformation("Adding new company with name");
 
             var command = Dto.Map<AddCompanyComand>();
-             await _mediator.Send(command);
-
+            await _mediator.Send(command);
         }
-
-
 
         [HttpPut("{id}/UpdateCompany")]
         public async Task<IActionResult> UpdateCompany(int id, UpdateCompanyDto Dto)

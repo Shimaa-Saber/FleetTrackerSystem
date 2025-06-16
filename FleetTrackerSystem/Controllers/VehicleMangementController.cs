@@ -1,18 +1,19 @@
-﻿using FleetTrackerSystem.CQRS.VehicleMangment.Comands;
-using FleetTrackerSystem.CQRS.VehicleMangment.Queries;
+﻿using FleetTrackerSystem.Application.CQRS.VehicleMangment.Comands;
+using FleetTrackerSystem.Application.CQRS.VehicleMangment.Queries;
+using FleetTrackerSystem.Application.DTOS.Vehicles;
+using FleetTrackerSystem.Application.ViewModels;
+
 using FleetTrackerSystem.Domain.Enums;
 using FleetTrackerSystem.Domain.Models;
-using FleetTrackerSystem.DTOS.Vehicles;
-using FleetTrackerSystem.Repositories.Repos;
-using FleetTrackerSystem.UnitOfWork;
-using FleetTrackerSystem.ViewModels;
+using FleetTrackerSystem.Infrastructure.Repositories.Repos;
+
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 using System.Threading.Tasks;
 
-namespace FleetTrackerSystem.Controllers
+namespace FleetTrackerSystem.API.Controllers
 {
     [EnableRateLimiting("FixedPolicy")]
     [Route("api/[controller]")]

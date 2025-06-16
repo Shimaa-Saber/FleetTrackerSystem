@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using FleetTrackerSystem.Application.DTOS.User;
 using FleetTrackerSystem.Domain.Models;
-using FleetTrackerSystem.DTOS.User;
 
 namespace FleetTrackerSystem.AutoMapperProfiles.UserProfiles
 {

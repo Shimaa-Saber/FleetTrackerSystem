@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using FleetTrackerSystem.DTOS.Company;
 using FleetTrackerSystem.Domain.Models;
+using FleetTrackerSystem.Application.DTOS.Company;
 
 namespace FleetTrackerSystem.AutoMapperProfiles.CompanyPtofiles
 {

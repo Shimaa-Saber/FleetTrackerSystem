@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using FleetTrackerSystem.Application.DTOS.Vehicles;
 using FleetTrackerSystem.Domain.Models;
-using FleetTrackerSystem.DTOS.Vehicles;
 
 namespace FleetTrackerSystem.AutoMapperProfiles.VehicleProfile
 {

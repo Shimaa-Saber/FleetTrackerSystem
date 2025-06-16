@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="MediatR" Version="12.5.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.RateLimiting" Version="7.0.0-rc.2.22476.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.14" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.14">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Seq.Extensions.Logging" Version="9.0.0-dev-00129" />
+    <PackageReference Include="Serilog" Version="4.3.1-dev-02373" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.1-dev-02307" />
+    <PackageReference Include="Serilog.Sinks.Http" Version="9.1.1" />
+    <PackageReference Include="Serilog.Sinks.MSSqlServer" Version="8.2.1-dev-00131" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="9.0.0" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\FleetTrackerSystem.Application\FleetTrackerSystem.Application.csproj" />
+    <ProjectReference Include="..\FleetTrackerSystem.Domain\FleetTrackerSystem.Domain.csproj" />
+    <ProjectReference Include="..\FleetTrackerSystem.Infrastructure\FleetTrackerSystem.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

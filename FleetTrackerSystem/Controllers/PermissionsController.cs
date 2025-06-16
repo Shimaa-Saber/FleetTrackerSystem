@@ -1,13 +1,12 @@
-﻿using FleetTrackerSystem.CQRS.CompanyMangement.Queries;
-using FleetTrackerSystem.CQRS.Permissions.Comands;
-using FleetTrackerSystem.CQRS.Permissions.Queries;
-using FleetTrackerSystem.UnitOfWork;
+﻿using FleetTrackerSystem.Application.CQRS.CompanyMangement.Queries;
+using FleetTrackerSystem.Application.CQRS.Permissions.Comands;
+using FleetTrackerSystem.Application.CQRS.Permissions.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
-namespace FleetTrackerSystem.Controllers
+namespace FleetTrackerSystem.API.Controllers
 {
     [EnableRateLimiting("FixedPolicy")]
     [Route("api/[controller]")]

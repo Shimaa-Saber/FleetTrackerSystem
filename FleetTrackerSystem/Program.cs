@@ -1,18 +1,19 @@
 using AutoMapper;
+using FleetTrackerSystem.API.Middlewares;
 using FleetTrackerSystem.AutoMapperProfiles.CompanyPtofiles;
 using FleetTrackerSystem.AutoMapperProfiles.UserProfiles;
 using FleetTrackerSystem.AutoMapperProfiles.VehicleProfile;
-using FleetTrackerSystem.Domain.Data;
+using FleetTrackerSystem.Domain.Interfaces;
 using FleetTrackerSystem.Domain.Models;
-using FleetTrackerSystem.Repositories.Interfaces;
-using FleetTrackerSystem.Repositories.Repos;
-using FleetTrackerSystem.UnitOfWork;
+using FleetTrackerSystem.Infrastructure.Data;
+using FleetTrackerSystem.Infrastructure.Repositories.Repos;
+using FleetTrackerSystem.Infrastructure.UnitOfWork;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Project_Api.Models;
+
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
 using System.Diagnostics;
@@ -35,6 +36,10 @@ builder.Services.AddScoped<IVehicle, VehicleRepository>();
 builder.Services.AddScoped<IUser, UserRepository>();
 builder.Services.AddScoped<IAccount, AccountRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
+builder.Services.AddScoped<GlobalErrorHandleMiddleWare>();
+
+builder.Services.AddScoped<TransactionMiddleWare>();
+
 builder.Logging.ClearProviders();
 Serilog.Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Debug()
@@ -160,6 +165,9 @@ MapperService.Mapper = config.CreateMapper();
 
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalErrorHandleMiddleWare>();
+ app.UseMiddleware<TransactionMiddleWare>();
 
 app.UseRateLimiter();
 // Configure the HTTP request pipeline.
