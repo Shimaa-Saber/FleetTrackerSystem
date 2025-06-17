@@ -7,6 +7,7 @@ using FleetTrackerSystem.Domain.Models;
 using FleetTrackerSystem.Infrastructure.Repositories.Repos;
 
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -38,7 +39,8 @@ namespace FleetTrackerSystem.API.Controllers
             _logger = logger;
             _mediator = mediator;
         }
-        
+        [Authorize(Roles = "SuperAdmin")]
+
         [HttpGet]
         public async Task<ResponseViewModel<IEnumerable<Company>>> GetAllCompanies()
         {
@@ -46,7 +48,7 @@ namespace FleetTrackerSystem.API.Controllers
             _logger.LogInformation("Retrieved {Count} companies from the database.", companies.Count());
             return ResponseViewModel<IEnumerable<Company>>.Success(companies);
         }
-        
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet("{id}")]
         public async Task<ResponseViewModel<Company>> GetCompanyById(int id)
         {
@@ -61,7 +63,7 @@ namespace FleetTrackerSystem.API.Controllers
            return ResponseViewModel<Company>.Success(company); 
            
         }
-
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost("AddCompany")]
         public async void AddCompany(AddCompany Dto)
         {
@@ -70,6 +72,7 @@ namespace FleetTrackerSystem.API.Controllers
             var command = Dto.Map<AddCompanyComand>();
             await _mediator.Send(command);
         }
+        [Authorize(Roles = "SuperAdmin")]
 
         [HttpPut("{id}/UpdateCompany")]
         public async Task<IActionResult> UpdateCompany(int id, UpdateCompanyDto Dto)
@@ -87,7 +90,7 @@ namespace FleetTrackerSystem.API.Controllers
            
             return NoContent();
         }
-
+        [Authorize(Roles = "SuperAdmin")]
 
         [HttpDelete("{id}/RemoveCompany")]
         public async Task<IActionResult> DeleteCompany(int id) { 

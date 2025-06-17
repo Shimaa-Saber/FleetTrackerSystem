@@ -2,6 +2,7 @@
 using FleetTrackerSystem.Application.CQRS.Permissions.Comands;
 using FleetTrackerSystem.Application.CQRS.Permissions.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -21,6 +22,7 @@ namespace FleetTrackerSystem.API.Controllers
             _logger = logger;
             _mediator = mediator;
         }
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet("GetAllPermissions")]
         public async Task<IActionResult> GetAllPermissions()
         {
@@ -28,7 +30,7 @@ namespace FleetTrackerSystem.API.Controllers
             var permissions = await _mediator.Send(new GetAllCompaniesQuery());
             return Ok(permissions);
         }
-
+        [Authorize(Roles = "SuperAdmin")]
         [HttpGet("users/{userId}")]
         public async Task<IActionResult> GetUserPermissions(string userId)
         {
@@ -40,7 +42,7 @@ namespace FleetTrackerSystem.API.Controllers
             return Ok(userPermissions);
         }
 
-
+        [Authorize(Roles = "SuperAdmin")]
         [HttpPost("users/{userId}")]
         public async Task<IActionResult> AssignPermissions(string userId, [FromBody] List<string> permissionNames)
         {
@@ -54,7 +56,7 @@ namespace FleetTrackerSystem.API.Controllers
             });
             return Ok("Permissions assigned successfully.");
         }
-
+        [Authorize(Roles = "SuperAdmin")]
 
         [HttpDelete("users/{userId}")]
         public async Task<IActionResult> RevokePermissions(string userId)

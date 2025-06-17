@@ -9,6 +9,7 @@ using FleetTrackerSystem.Domain.Models;
 using FleetTrackerSystem.Infrastructure.Repositories.Repos;
 using Hangfire;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
@@ -45,6 +46,7 @@ namespace FleetTrackerSystem.API.Controllers
             return ResponseViewModel<Vehicle>.Success(vehicle);
         }
 
+        [Authorize(Roles = "SuperAdmin,CompanyAdmin")]
 
         [HttpPost("AddVehicle")]
         public async Task<IActionResult> AddVehicle(AddVehicleDto dto)
@@ -61,7 +63,7 @@ namespace FleetTrackerSystem.API.Controllers
             return NoContent();
 
         }
-
+        [Authorize(Roles = "SuperAdmin,CompanyAdmin")]
         [HttpPut("UpdateVehicle/{id}")]
         public async Task<IActionResult> UpdateVehicle(int id, EditVehicleDto dto)
         {
@@ -75,7 +77,7 @@ namespace FleetTrackerSystem.API.Controllers
              await  _mediator.Send(vehicle);
             return NoContent();
         }
-
+        [Authorize(Roles = "SuperAdmin,CompanyAdmin")]
         [HttpDelete("DeleteVehicle/{id}")]
         public async Task<IActionResult> DeleteVehicle(int id)
         {
