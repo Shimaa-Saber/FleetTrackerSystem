@@ -1,4 +1,6 @@
-﻿using FleetTrackerSystem.Domain.Interfaces;
+﻿
+using FleetTrackerSystem.Domain.Interfaces;
+using FleetTrackerSystem.Domain.Models;
 
 namespace FleetTrackerSystem.Infrastructure.UnitOfWork
 {

@@ -1,4 +1,5 @@
-﻿using FleetTrackerSystem.Domain.Interfaces;
+﻿using FleetTrackerSystem.Infrastructure.UnitOfWork;
+using FleetTrackerSystem.Domain.Interfaces;
 using MediatR;
 
 namespace FleetTrackerSystem.Application.CQRS.Permissions.Comands

@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\FleetTrackerSystem.Domain\FleetTrackerSystem.Domain.csproj" />
+    <ProjectReference Include="..\FleetTrackerSystem.Infrastructure\FleetTrackerSystem.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

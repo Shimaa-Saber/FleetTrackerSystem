@@ -37,8 +37,8 @@ namespace FleetTrackerSystem.Application.CQRS.UserMangement.Comands
             {
                 throw new KeyNotFoundException("User not found");
             }
-        var user2=request.Map<UpdateUserDto>();
-          await  _unitOfWork.User.UpdateUser(user2);
+            //var user2 = request.Map<UpdateUserDto>();
+            //await _unitOfWork.User.UpdateUser(user2);
             await _unitOfWork.SaveChangesAsync();
         }
     }

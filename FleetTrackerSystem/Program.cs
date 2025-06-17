@@ -1,5 +1,6 @@
 using AutoMapper;
 using FleetTrackerSystem.API.Middlewares;
+using FleetTrackerSystem.Application.Background_jops;
 using FleetTrackerSystem.AutoMapperProfiles.CompanyPtofiles;
 using FleetTrackerSystem.AutoMapperProfiles.UserProfiles;
 using FleetTrackerSystem.AutoMapperProfiles.VehicleProfile;
@@ -8,12 +9,13 @@ using FleetTrackerSystem.Domain.Models;
 using FleetTrackerSystem.Infrastructure.Data;
 using FleetTrackerSystem.Infrastructure.Repositories.Repos;
 using FleetTrackerSystem.Infrastructure.UnitOfWork;
+using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-
 using Serilog;
 using Serilog.Sinks.MSSqlServer;
 using System.Diagnostics;
@@ -37,8 +39,29 @@ builder.Services.AddScoped<IUser, UserRepository>();
 builder.Services.AddScoped<IAccount, AccountRepository>();
 builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
 builder.Services.AddScoped<GlobalErrorHandleMiddleWare>();
+builder.Services.AddScoped<IVehicleNotifier, VehicleNotifier>();
 
 builder.Services.AddScoped<TransactionMiddleWare>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSwaggerUI", policy =>
+    {
+        policy.WithOrigins("http://localhost:5000", "https://localhost:5001") // Adjust ports
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+builder.Services.AddHangfire(config =>
+    config.SetDataCompatibilityLevel(CompatibilityLevel.Version_170)
+          .UseSimpleAssemblyNameTypeSerializer()
+          .UseRecommendedSerializerSettings()
+          .UseSqlServerStorage(builder.Configuration.GetConnectionString("CS"))
+);
+
+builder.Services.AddHangfireServer();
+
 
 builder.Logging.ClearProviders();
 Serilog.Log.Logger = new LoggerConfiguration()
@@ -165,11 +188,14 @@ MapperService.Mapper = config.CreateMapper();
 
 
 var app = builder.Build();
+app.UseCors("AllowSwaggerUI");
 
 app.UseMiddleware<GlobalErrorHandleMiddleWare>();
- app.UseMiddleware<TransactionMiddleWare>();
+// app.UseMiddleware<TransactionMiddleWare>();
 
 app.UseRateLimiter();
+
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -177,8 +203,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+
 app.UseAuthorization();
+app.UseHangfireDashboard();
 
 app.MapControllers();
+
 
 app.Run();

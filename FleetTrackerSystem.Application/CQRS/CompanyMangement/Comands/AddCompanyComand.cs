@@ -4,7 +4,8 @@ using FleetTrackerSystem.Domain.Models;
 
 using MediatR;
 using System.ComponentModel.DataAnnotations;
-using FleetTrackerSystem.
+using FleetTrackerSystem.Infrastructure.UnitOfWork;
+using FleetTrackerSystem.Infrastructure.Repositories.Repos;
 
 namespace FleetTrackerSystem.Application.CQRS.CompanyMangement.Comands
 {
@@ -28,7 +29,7 @@ namespace FleetTrackerSystem.Application.CQRS.CompanyMangement.Comands
         public async Task Handle(AddCompanyComand request, CancellationToken cancellationToken)
         {
             var company = request.Map<Company>();
-            
+
 
             _unitOfWork.Company.Add(company);
             await _unitOfWork.SaveChangesAsync();

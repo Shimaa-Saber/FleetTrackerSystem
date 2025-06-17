@@ -41,8 +41,8 @@ namespace FleetTrackerSystem.Application.CQRS.UserMangement.Comands
         }
         public async Task Handle(AddUserComand request, CancellationToken cancellationToken)
         {
-            var user = request.Map<CreateUserDto>();
-            await _unitOfWork.User.CreateUser(user);
+            //var user = request.Map<CreateUserDto>();
+            //await _unitOfWork.User.CreateUser(user);
             await _unitOfWork.SaveChangesAsync();
            
         }

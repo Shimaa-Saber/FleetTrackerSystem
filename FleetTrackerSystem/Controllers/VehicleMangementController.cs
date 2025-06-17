@@ -4,9 +4,10 @@ using FleetTrackerSystem.Application.DTOS.Vehicles;
 using FleetTrackerSystem.Application.ViewModels;
 
 using FleetTrackerSystem.Domain.Enums;
+using FleetTrackerSystem.Domain.Interfaces;
 using FleetTrackerSystem.Domain.Models;
 using FleetTrackerSystem.Infrastructure.Repositories.Repos;
-
+using Hangfire;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -55,6 +56,7 @@ namespace FleetTrackerSystem.API.Controllers
             
             var vehicle = dto.Map<AddVehicleComand>();
            await _mediator.Send(vehicle);
+            BackgroundJob.Enqueue<IVehicleNotifier>(notifier => notifier.NotifyVehicleAddedAsync(vehicle.Name));
 
             return NoContent();
 

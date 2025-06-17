@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+﻿
 
+
+
+using Microsoft.AspNetCore.Identity;
 
 namespace FleetTrackerSystem.Domain.Models
 {
-    public class ApplicationRole:IdentityRole
+    public class ApplicationRole:IdentityRole<string>
     {
         public string NormalizedName { get; set; }
 

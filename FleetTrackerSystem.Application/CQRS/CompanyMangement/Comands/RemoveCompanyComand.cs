@@ -19,7 +19,7 @@ namespace FleetTrackerSystem.Application.CQRS.CompanyMangement.Comands
         }
         public async Task Handle(RemoveCompanyComand request,CancellationToken cancellationToken)
         {
-            //var company=_unitOfWork.Company.GetByID(request.id);
+            var company = _unitOfWork.Company.GetByID(request.id);
             _unitOfWork.Company.Remove(request.id);
            await _unitOfWork.SaveChangesAsync();
            

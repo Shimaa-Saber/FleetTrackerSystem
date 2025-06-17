@@ -36,8 +36,8 @@ namespace FleetTrackerSystem.Application.CQRS.CompanyMangement.Comands
         public async Task Handle(UpdateCompanyComand request, CancellationToken cancellationToken)
         {
             var company = request.Map<Company>();
-            
-            
+
+
             _unitOfWork.Company.Update(company);
             await _unitOfWork.SaveChangesAsync();
         }

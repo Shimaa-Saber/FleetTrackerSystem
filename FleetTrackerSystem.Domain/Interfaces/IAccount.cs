@@ -1,4 +1,6 @@
-﻿using FleetTrackerSystem.Application.DTOS.User;
+﻿
+
+using FleetTrackerSystem.Application.DTOS.User;
 
 namespace FleetTrackerSystem.Domain.Interfaces
 {
